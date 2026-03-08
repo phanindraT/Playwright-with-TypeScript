@@ -23,8 +23,8 @@ export class PimPage {
         await employeeIdLocator.fill(employeeId);
     }
     async saveEmployeeDetails() {
-        await this.page.getByRole('button', { name: 'Save' }).click();
-        await expect(this.page).toHaveURL(/pim\/viewPersonalDetails\/empNumber/);
+        await Promise.all([this.page.waitForURL(/pim\/viewPersonalDetails\/empNumber/),
+            this.page.getByRole('button', { name: 'Save' }).click()])
     }
 
     async verifyEmployeeCreated(firstName: string, randomNumber: string) {

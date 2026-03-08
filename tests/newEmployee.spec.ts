@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
 import { PimPage } from '../pages/pimPage';
+import { HeaderComponent } from '../pages/components/HeaderComponent';
 
 
 test("new employee", async ({ page }) => {
@@ -8,8 +9,8 @@ test("new employee", async ({ page }) => {
   // login flow
   const loginPage = new LoginPage(page);
   const pimPage = new PimPage(page);
+  const header = new HeaderComponent(page);
   const randomNumber = randomNumberGenerator(); 
-
 
   await loginPage.goto();
   await loginPage.login('Admin', 'admin123');
@@ -20,6 +21,9 @@ test("new employee", async ({ page }) => {
   await pimPage.fillEmployeeDetails("google", "google Inc",randomNumber);
   await pimPage.saveEmployeeDetails();
   await pimPage.verifyEmployeeCreated("google",randomNumber);
+
+  await header.logout();
+  await expect(page).toHaveURL(/login/);
 
 
   

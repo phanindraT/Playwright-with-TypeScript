@@ -10,7 +10,10 @@ export class LoginPage {
         const usernameLocator = this.page.getByPlaceholder("Username");
         await usernameLocator.fill(username);
         await this.page.getByPlaceholder("Password").fill(password);
-        await this.page.getByRole("button", { name: "Login" }).click();
+        await Promise.all([
+            this.page.waitForURL(/dashboard/),
+            this.page.getByRole("button", { name: "Login" }).click()
+        ]);
     }
 
 
