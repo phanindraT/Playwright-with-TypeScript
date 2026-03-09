@@ -43,35 +43,95 @@ Because these above methods perform asynchronous operations (interacting with th
 
 const btn = page.locator('button')	 --> No await required. 
 
+* test("new employee", async ({page})=>{ await page.goto("") }) in this what is relation between async and await
+In TypeScript, marking the test function as async makes it return a Promise<void>, which Playwright expects. await is used to pause execution until a Promise resolves. Since Playwright APIs return Promises, we must use await, and await can only be used inside an async function.
 
 
+* Why the below code can Fail Without Promise.all
+If you do this:
+await page.getByRole("button", { name: "Login" }).click();
+await page.waitForURL(/dashboard/);
+Sometimes this fails because:
+
+Click happens
+Navigation starts immediately
+waitForURL starts listening too late
+It misses the navigation event
+This is called a race condition.
+
+* Why Promise.all Is Safer
+await Promise.all([
+  page.waitForURL(/dashboard/),
+  page.getByRole("button", { name: "Login" }).click()
+]);
+Now:
+waitForURL starts listening FIRST
+Then click happens
+No race condition
+This is enterprise-level correct synchronization.
+
+* How do you handle custom dropdowns?
+Since custom dropdowns are built using div elements, I first click to expand the dropdown, then select the option by text or role.
+
+* How does Playwright auto-wait work internally?
+Playwright performs actionability checks before executing actions like click or fill. It ensures the element is attached, visible, stable, enabled, and actionable.
+It retries these checks until timeout. Assertions also retry until the condition becomes true, which makes tests stable and eliminates the need for explicit waits.
+
+Note : Auto-wait does NOT wait for:
+Custom API calls finishing
+Background XHR unless tied to UI
+Animations that don’t affect stability
+
+In those cases, you use:
+waitForResponse()
+waitForRequest()
+waitForSelector()
+waitForURL()
 
 
+* There is no role attribute in the html tag for an element. even then page.getByRole('textbox', { name: 'First Name' }) works for few scenarios. How does getByRole work?
+Playwright uses the accessibility tree. Many HTML elements have implicit ARIA roles. For example, <input type="text"> has the implicit role "textbox", so getByRole('textbox') works even without an explicit role attribute.
 
 
+* when:
+No proper <label for="">
+No id
+No unique attribute
+UI framework is messy 
+
+unable to locate the element directly,
+you:
+Locate a stable parent container
+Filter by visible label text
+Find the input inside that container
+This pattern is called: Container Scoping
+
+waitForURL() only waits. 
+expect().toHaveURL() waits + retries + asserts. So, it is better to use expect(page).toHaveURL() 
+
+Role-based locators are stronger than raw text matching.
+
+* Playwright does NOT work purely on DOM attributes.
+It works on:
+Accessibility Tree
+ARIA roles
+Computed name
+Semantic meaning
+That’s why:
+getByRole('link', { name: 'PIM' })
+Works even if role="link" is not visible in HTML.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+* constructor(private page: Page) {}  means  This is TypeScript shorthand for:
+private page: Page;
+constructor(page: Page) {
+  this.page = page;
+}
+So in one line, you:
+Declare a class property
+Mark it private
+Assign it in constructor
+It’s just shorter syntax
 
 
 

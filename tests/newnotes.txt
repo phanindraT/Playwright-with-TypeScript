@@ -38,5 +38,3 @@ difference b/w snapshot and screenshot in trace viewer.
 
 
 
-How do you handle custom dropdowns?
-Since custom dropdowns are built using div elements, I first click to expand the dropdown, then select the option by text or role.

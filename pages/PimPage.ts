@@ -5,8 +5,11 @@ export class PimPage {
 
     }
     async clickOnPim() {
-        await this.page.getByText('PIM', { exact: true }).click();
-        await expect(this.page).toHaveURL(/pim\/viewEmployeeList/);
+        await Promise.all([
+                     this.page.waitForURL(/pim\/viewEmployeeList/),
+                             this.page.getByText('PIM', { exact: true }).click()
+
+        ]);
     }
 
     async clickOnAddbutton() {
@@ -23,8 +26,10 @@ export class PimPage {
         await employeeIdLocator.fill(employeeId);
     }
     async saveEmployeeDetails() {
-        await Promise.all([this.page.waitForURL(/pim\/viewPersonalDetails\/empNumber/),
-            this.page.getByRole('button', { name: 'Save' }).click()])
+        await Promise.all([
+            this.page.waitForURL(/pim\/viewPersonalDetails\/empNumber/),
+            this.page.getByRole('button', { name: 'Save' }).click()
+        ])
     }
 
     async verifyEmployeeCreated(firstName: string, randomNumber: string) {
