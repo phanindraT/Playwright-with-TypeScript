@@ -5,7 +5,7 @@ export class LoginPage {
     constructor(private page: Page) { }
 
     async goto(){
-     await this.page.goto("https://opensource-demo.orangehrmlive.com/web/index.php/auth/login");
+     await this.page.goto("/web/index.php/auth/login");
     }
     
     async login(username: string, password: string) {

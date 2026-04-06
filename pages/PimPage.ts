@@ -1,29 +1,40 @@
-import { Page, expect } from '@playwright/test';
+import { Page, expect,Locator } from '@playwright/test';
 
 export class PimPage {
-    constructor(private page: Page) {
+    readonly pimMenu : Locator;
+    readonly addButton : Locator;
+    readonly firstNameField : Locator;
+    readonly lastNameField : Locator;
+    readonly employeeIdLocator :Locator;
 
-    }
+    constructor(private page: Page) {
+     this.pimMenu  = this.page.getByText('PIM', { exact: true });
+     this.addButton = this.page.getByRole('button', { name: 'Add' });
+     this.firstNameField = this.page.getByRole('textbox', { name: 'First Name' });
+     this.lastNameField = this.page.getByRole('textbox', { name: 'Last Name' });
+     this.employeeIdLocator = this.page.locator('.oxd-input-group')
+            .filter({ hasText: 'Employee Id' })
+            .getByRole('textbox');
+ }
+
+
     async clickOnPim() {
         await Promise.all([
                      this.page.waitForURL(/pim\/viewEmployeeList/),
-                             this.page.getByText('PIM', { exact: true }).click()
+                         this.pimMenu.click()
 
         ]);
     }
 
     async clickOnAddbutton() {
-        await this.page.getByRole('button', { name: 'Add' }).click();
+        await this.addButton.click();
         await expect(this.page).toHaveURL(/pim\/addEmployee/);
 
     }
     async fillEmployeeDetails(firstName: string, lastName: string, employeeId: string) {
-        await this.page.getByRole('textbox', { name: 'First Name' }).fill(firstName);
-        await this.page.getByRole('textbox', { name: 'Last Name' }).fill(lastName);
-        const employeeIdLocator = this.page.locator('.oxd-input-group')
-            .filter({ hasText: 'Employee Id' })
-            .getByRole('textbox');
-        await employeeIdLocator.fill(employeeId);
+        await this.firstNameField.fill(firstName);
+        await this.lastNameField.fill(lastName);
+        await this.employeeIdLocator.fill(employeeId);
     }
     async saveEmployeeDetails() {
         await Promise.all([
