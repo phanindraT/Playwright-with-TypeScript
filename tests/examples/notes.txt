@@ -1,0 +1,142 @@
+npx playwright test :  Runs all test files in the tests folder on all configured browsers (Chromium, Firefox, WebKit) by default.
+
+npx playwright test --ui : Opens the Playwright Test UI for selecting and running tests interactively.
+
+npx playwright test mytest.spec.ts : Runs only the specified test file.
+
+npx playwright test mytest.spec.ts mytest2.spec.ts : Runs the specified test files.
+
+npx playwright test -g verify : Executes tests where the test title includes the word "verify".
+
+npx playwright test -g "Login.*Success" : Runs all tests where the title matches the regex pattern "Login" followed by any text and then "Success".​
+
+npx playwright test mytest.spec.ts --project=chromium : Runs tests only on the Chromium browser. Replace chromium with firefox or webkit as needed.
+
+npx playwright test --headed : Runs browsers with the GUI visible.
+
+npx playwright show-report : Opens the Playwright HTML test report.
+
+example : Using Regex for URL Assertions & Pattern Matching
+await expect(page).toHaveURL(/automation-practice/);  --> This passes if the URL contains "automation-practice" anywhere in it.
+
+await expect(page).toHaveURL(/https:\/\/example\.com\/dashboard.*/); --> This matches URLs starting with https://example.com/dashboard.
+
+Playwright's distinct prioritization of locators:
+First Priority: Playwright built-in locators (getByRole, getByText, getByLabel, etc.).
+Second Priority: CSS selectors.
+Third Priority: XPath selectors.
+
+DOM Concept :Locators interact with DOM elements — not directly with the raw HTML or UI — but with the browser-generated DOM. API interfrace provided by browser.
+Built-In Locator Methods: page.getByRole(), page.getByText(), page.getByLabel(), page.getByPlaceholder(), page.getByAltText() (for images with alt attributes),
+page.getByTitle(), page.getByTestId().
+
+Assertions use the expect() function, commonly paired with checks such as toBeVisible() for visibility, or toHaveText() for text validation.
+
+** Use await where actions or assertions return promises or perform actions.
+Don't use await for pure locator retrieval (unless the method is asynchronous). --> In Playwright with TypeScript, locators represent references to elements on the page and are designed to be lightweight and lazily evaluated.
+This means: Locator retrieval methods like page.locator() or built-in locators (page.getByText(), page.getByAltText(), etc.) do not return promises and do not require await. They simply create and return a locator object that can later be used to interact with the element(s).
+Use await only when you are performing an action on the locator or asserting something that returns a promise. For example, when you do something like:
+await locator.click()
+await expect(locator).toBeVisible()
+await locator.fill('text')
+Because these above methods perform asynchronous operations (interacting with the browser or waiting for conditions), they return promises and must be awaited.
+
+const btn = page.locator('button')	 --> No await required. 
+
+* test("new employee", async ({page})=>{ await page.goto("") }) in this what is relation between async and await
+In TypeScript, marking the test function as async makes it return a Promise<void>, which Playwright expects. await is used to pause execution until a Promise resolves. Since Playwright APIs return Promises, we must use await, and await can only be used inside an async function.
+
+
+* Why the below code can Fail Without Promise.all
+If you do this:
+await page.getByRole("button", { name: "Login" }).click();
+await page.waitForURL(/dashboard/);
+Sometimes this fails because:
+
+Click happens
+Navigation starts immediately
+waitForURL starts listening too late
+It misses the navigation event
+This is called a race condition.
+
+* Why Promise.all Is Safer
+await Promise.all([
+  page.waitForURL(/dashboard/),
+  page.getByRole("button", { name: "Login" }).click()
+]);
+Now:
+waitForURL starts listening FIRST
+Then click happens
+No race condition
+This is enterprise-level correct synchronization.
+
+* How do you handle custom dropdowns?
+Since custom dropdowns are built using div elements, I first click to expand the dropdown, then select the option by text or role.
+
+* How does Playwright auto-wait work internally?
+Playwright performs actionability checks before executing actions like click or fill. It ensures the element is attached, visible, stable, enabled, and actionable.
+It retries these checks until timeout. Assertions also retry until the condition becomes true, which makes tests stable and eliminates the need for explicit waits.
+
+Note : Auto-wait does NOT wait for:
+Custom API calls finishing
+Background XHR unless tied to UI
+Animations that don’t affect stability
+
+In those cases, you use:
+waitForResponse()
+waitForRequest()
+waitForSelector()
+waitForURL()
+
+
+* There is no role attribute in the html tag for an element. even then page.getByRole('textbox', { name: 'First Name' }) works for few scenarios. How does getByRole work?
+Playwright uses the accessibility tree. Many HTML elements have implicit ARIA roles. For example, <input type="text"> has the implicit role "textbox", so getByRole('textbox') works even without an explicit role attribute.
+
+
+* when:
+No proper <label for="">
+No id
+No unique attribute
+UI framework is messy 
+
+unable to locate the element directly,
+you:
+Locate a stable parent container
+Filter by visible label text
+Find the input inside that container
+This pattern is called: Container Scoping
+
+waitForURL() only waits. 
+expect().toHaveURL() waits + retries + asserts. So, it is better to use expect(page).toHaveURL() 
+
+Role-based locators are stronger than raw text matching.
+
+* Playwright does NOT work purely on DOM attributes.
+It works on:
+Accessibility Tree
+ARIA roles
+Computed name
+Semantic meaning
+That’s why:
+getByRole('link', { name: 'PIM' })
+Works even if role="link" is not visible in HTML.
+
+
+* constructor(private page: Page) {}  means  This is TypeScript shorthand for:
+private page: Page;
+constructor(page: Page) {
+  this.page = page;
+}
+So in one line, you:
+Declare a class property
+Mark it private
+Assign it in constructor
+It’s just shorter syntax
+
+
+
+
+
+
+
+
