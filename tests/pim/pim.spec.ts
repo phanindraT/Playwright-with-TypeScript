@@ -10,7 +10,7 @@ test("new employee add from fixtures", async({pimflows,pimpage,header,page}) =>{
     // await loginpage.goto();
     // await loginpage.login('Admin', 'admin123');
     // await expect(page).toHaveURL(/dashboard/);
-     const randomNumber = randomNumberGenerator();
+    // const randomNumber = randomNumberGenerator();
     
     //  const employeeInfo : Employee ={
     //     firstname : employeeData.firstName,
