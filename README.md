@@ -251,7 +251,7 @@ Flow internally performs:
 
 ---
 
-# Best Practices Followed
+# Practices Followed
 
 - Separation of concerns
 - Reusable components
@@ -260,57 +260,6 @@ Flow internally performs:
 - Typed models/interfaces
 - Maintainable framework structure
 
----
-
-# Interview Explanation (Short Version)
-
-“This framework is developed using Playwright with TypeScript following Page Object Model and Flow-based architecture. I used custom fixtures for dependency injection of page objects and flows. Environment handling is implemented using dotenv. Authentication reuse is achieved using Playwright storage state. The framework is scalable, reusable, and designed for enterprise-level automation.”
-
----
-
-# Improvements Recommended
-
-## 1. Add npm scripts in package.json
-Recommended:
-```json
-"scripts": {
-  "test": "playwright test",
-  "test:headed": "playwright test --headed",
-  "test:chrome": "playwright test --project=chromium",
-  "report": "playwright show-report"
-}
-```
-
----
-
-## 2. Remove node_modules before pushing to GitHub
-Add:
-```bash
-node_modules/
-playwright-report/
-test-results/
-```
-
-inside `.gitignore`
-
----
-
-## 3. Avoid console logs in fixtures
-Instead use:
-- Playwright hooks
-- Reporter logs
-- Debug logs only when needed
-
----
-
-## 4. Add actual test specs
-Currently framework structure is strong. Add more:
-- UI validations
-- CRUD flows
-- Negative scenarios
-- Data-driven tests
-
----
 
 # Author
 
