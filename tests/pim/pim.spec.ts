@@ -1,7 +1,5 @@
 import {test , expect} from '../../fixtures/baseTest';
 import {randomNumberGenerator} from '../../utils/RandomUtils';
-import { employeeData } from '../../test-data/employeeData';
-import { PimFlows } from '../../flows/PimFlows';
 import { Employee } from '../../types/Employee';
 import { EmployeeFactory } from '../../factories/EmployeeFactory';
 
