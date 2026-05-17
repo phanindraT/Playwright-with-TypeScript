@@ -20,6 +20,7 @@ function printb(bnew : b){
 
 }
 
+
 test("typescript practice",async()=>{
 
 const obj = {

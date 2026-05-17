@@ -11,7 +11,7 @@ test("opensource", async ({ page }) => {
     await expect(page).toHaveURL(/viewCandidates/);
 });
 
-test.only("opensourcetest", async ({ page }) => {
+test("opensourcetest", async ({ page }) => {
    
     await page.goto("https://opensource-demo.orangehrmlive.com/web/index.php/auth/login");
     await page.getByPlaceholder("Username").fill('Admin');

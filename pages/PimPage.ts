@@ -8,7 +8,8 @@ export class PimPage {
     readonly employeeIdLocator :Locator;
 
     constructor(private page: Page) {
-     this.pimMenu  = this.page.getByText('PIM', { exact: true });
+    // this.pimMenu  = this.page.getByText('PIM', { exact: true });
+     this.pimMenu =this.page.locator('span').filter({ hasText: 'PIM' }).first();
      this.addButton = this.page.getByRole('button', { name: 'Add' });
      this.firstNameField = this.page.getByRole('textbox', { name: 'First Name' });
      this.lastNameField = this.page.getByRole('textbox', { name: 'Last Name' });
@@ -17,6 +18,9 @@ export class PimPage {
             .getByRole('textbox');
  }
 
+     async navigate(){
+       await this.page.goto('web/index.php/pim/viewEmployeeList');
+     }
 
     async clickOnPim() {
         await Promise.all([
@@ -43,16 +47,24 @@ export class PimPage {
         ])
     }
 
-    async verifyEmployeeCreated(firstName: string, randomNumber: string) {
-        await expect(this.page.getByPlaceholder('First Name')).toHaveValue(firstName);
-        const employeeIdField = this.page
-            .locator('.oxd-input-group')
-            .filter({ hasText: 'Employee Id' })
-            .getByRole('textbox');
-        await expect(employeeIdField).toHaveValue(randomNumber);
+    // async verifyEmployeeCreated(firstName: string, randomNumber: string) {
+    //     await expect(this.page.getByPlaceholder('First Name')).toHaveValue(firstName);
+    //     const employeeIdField = this.page
+    //         .locator('.oxd-input-group')
+    //         .filter({ hasText: 'Employee Id' })
+    //         .getByRole('textbox');
+    //     await expect(employeeIdField).toHaveValue(randomNumber);
 
+    // }
+
+    getEmployeeIdInput() {
+         
+        return this.employeeIdLocator;
     }
-
+    getFirstNameInput(){
+    return this.page.getByPlaceholder('First Name');
+    }
+ 
 
 }
 

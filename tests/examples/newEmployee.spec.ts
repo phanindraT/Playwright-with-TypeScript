@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { LoginPage } from '../pages/LoginPage';
-import { PimPage } from '../pages/pimPage';
-import { HeaderComponent } from '../pages/components/HeaderComponent';
-import { randomNumberGenerator } from '../utils/RandomUtils';
+import { LoginPage } from '../../pages/LoginPage';
+import { PimPage } from '../../pages/PimPage';
+import { HeaderComponent } from '../../pages/components/HeaderComponent';
+import { randomNumberGenerator } from '../../utils/RandomUtils';
 
 
 

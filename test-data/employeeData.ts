@@ -1,4 +1,4 @@
-export const employee = {
+export const employeeData = {
     firstName : 'google' ,
     lastname : 'google Inc'
 }
